@@ -5,4 +5,11 @@ async function login(data) {
     return response
 }
 
-export default login
+async function register(data) {
+    const response = await api.post('users', data)
+    return response
+}
+
+export default {
+    login, register
+}
