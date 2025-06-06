@@ -3,9 +3,8 @@
 
 <template>
     <div class="flex h-screen">
-  <!-- Sidebar -->
-  <aside class="w-72 bg-black text-white flex flex-col">
-    <div class="p-4 text-xl font-semibold border-b border-gray-700">
+  <aside class="w-72 bg-[#1c1e21] text-white flex flex-col border-r border-gray-700">
+    <div class="p-4 text-xl font-semibold">
       Logo
     </div>
     <nav class="flex-1 p-4 space-y-2">
@@ -18,8 +17,6 @@
       <button class="w-full px-4 py-2 bg-red-600 rounded hover:bg-red-700">Sair</button>
     </div>
   </aside>
-
-  <!-- Conteúdo principal -->
 </div>
 
 </template>
