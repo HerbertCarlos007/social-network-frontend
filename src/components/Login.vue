@@ -1,8 +1,11 @@
 <script setup>
 import { reactive, ref } from "vue";
 import userService from "../services/userService";
+import {useRouter} from 'vue-router'
 
 const showRegister = ref(false);
+const router = useRouter()
+
 
 const loginForm = reactive({
   email: "",
@@ -26,6 +29,7 @@ async function handleLogin(e) {
   try {
     const response = await userService.login(loginForm);
     localStorage.setItem("token", response.data.access_token);
+    router.push('/home')
   } catch (error) {
     errorMessage.value = error.response?.data?.message || "Erro no login";
   }

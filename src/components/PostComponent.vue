@@ -6,14 +6,41 @@ import postService from "../services/postService";
 const faImageIcon = faImage;
 const posts = ref([]);
 
+const content = ref("");
+const file = ref(null);
+
 onMounted(async () => {
+  getAllPosts()
+});
+
+const getAllPosts = async () => {
   try {
     const response = await postService.getAllPosts();
-    posts.value = response.data.posts;
+    posts.value = response.data.data;
   } catch (error) {
     console.error("Erro ao buscar posts:", error);
   }
-});
+}
+
+const handleFileChange = (event) => {
+  const target = event.target;
+  if (target.files && target.files.length > 0) {
+    file.value = target.files[0];
+  }
+};
+
+const createPost = async () => {
+  if(!file.value) return
+
+  const formData = new FormData();
+  formData.append("content", content.value);
+  formData.append("image_post_url", file.value);
+
+  try {
+    const response = await postService.createPost(formData);
+    await getAllPosts()
+  } catch (error) {}
+};
 </script>
 
 <template>
@@ -32,17 +59,24 @@ onMounted(async () => {
             alt="avatar"
           />
         </div>
-        <div
-          class="flex-1 p-3 cursor-pointer rounded-lg bg-[#5a5c5f] text-white hover:bg-[#6a6c6f] transition"
-        >
-          No que você está pensando, Bill?
-        </div>
+        <input
+          v-model="content"
+          type="text"
+          placeholder="No que você está pensando, Bill?"
+          class="flex-1 p-3 rounded-lg bg-[#5a5c5f] text-white placeholder-white/70 focus:outline-none focus:bg-[#6a6c6f] transition"
+        />
       </div>
 
       <div class="flex justify-between items-center p-3 text-white">
-        <div
-          class="flex items-center gap-2 cursor-pointer hover:text-blue-400 transition"
+        <label
+          class="flex items-center gap-2 cursor-pointer hover:text-blue-400 transition text-white"
         >
+          <input
+            type="file"
+            accept="image/*"
+            class="hidden"
+            @change="handleFileChange"
+          />
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -60,8 +94,10 @@ onMounted(async () => {
             <polyline points="21 15 16 10 5 21"></polyline>
           </svg>
           <span class="text-sm">Adicionar foto</span>
-        </div>
+        </label>
+
         <button
+          @click="createPost()"
           class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-md flex items-center gap-2 transition"
         >
           <svg
@@ -85,7 +121,9 @@ onMounted(async () => {
 
     <!-- Post do usuário -->
     <div
-      v-for="post in posts" :key="post.id" class="w-[550px] bg-[#2e3033] shadow-2xl border border-white/10 rounded-lg mt-5 p-3.5 mb-6"
+      v-for="post in posts"
+      :key="post.id"
+      class="w-[550px] bg-[#2e3033] shadow-2xl border border-white/10 rounded-lg mt-5 p-3.5 mb-6"
     >
       <div class="flex justify-between items-start">
         <div class="flex gap-3.5 items-center">
