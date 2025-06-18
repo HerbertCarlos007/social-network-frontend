@@ -10,7 +10,7 @@ const content = ref("");
 const file = ref(null);
 
 onMounted(async () => {
-  getAllPosts()
+  getAllPosts();
 });
 
 const getAllPosts = async () => {
@@ -20,7 +20,7 @@ const getAllPosts = async () => {
   } catch (error) {
     console.error("Erro ao buscar posts:", error);
   }
-}
+};
 
 const handleFileChange = (event) => {
   const target = event.target;
@@ -30,7 +30,7 @@ const handleFileChange = (event) => {
 };
 
 const createPost = async () => {
-  if(!file.value) return
+  if (!file.value) return;
 
   const formData = new FormData();
   formData.append("content", content.value);
@@ -38,24 +38,22 @@ const createPost = async () => {
 
   try {
     const response = await postService.createPost(formData);
-    await getAllPosts()
+    await getAllPosts();
 
-    content.value = ''
+    content.value = "";
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 };
 
-const handleLike = async (postId) => {
+const toggleLike = async (postId) => {
   try {
-    await postService.likePost(postId)
-    console.log(postId)
-
+    await postService.likePost(postId);
+    await getAllPosts()
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
-}
-
+};
 </script>
 
 <template>
@@ -189,7 +187,13 @@ const handleLike = async (postId) => {
       <div class="flex justify-between items-center">
         <div class="flex gap-4">
           <button
-            @click="handleLike(post.id)" class="flex items-center gap-2 text-gray-400 hover:text-red-400 py-1 px-2 rounded hover:bg-[#3e4043] transition"
+            @click="toggleLike(post.id)"
+            :class="[
+              'flex items-center gap-2 py-1 px-2 rounded transition',
+              post.liked_by_user
+                ? 'text-red-400 hover:text-red-600 hover:bg-[#3e4043]'
+                : 'text-gray-400 hover:text-red-400 hover:bg-[#3e4043]',
+            ]"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -197,17 +201,19 @@ const handleLike = async (postId) => {
               height="18"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="currentColor"
+              :stroke="post.liked_by_user ? 'red' : 'currentColor'"
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
             >
               <path
                 d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                :fill="post.liked_by_user ? 'red' : 'none'"
               ></path>
             </svg>
             Curtir
           </button>
+
           <button
             class="flex items-center gap-2 text-gray-400 hover:text-blue-400 py-1 px-2 rounded hover:bg-[#3e4043] transition"
           >
@@ -251,7 +257,7 @@ const handleLike = async (postId) => {
             Compartilhar
           </button>
         </div>
-        <span class="text-sm text-gray-500">12 curtidas</span>
+        <span class="text-sm text-gray-500">{{ post.count_likes }} curtidas</span>
       </div>
     </div>
   </div>
