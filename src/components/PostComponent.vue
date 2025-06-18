@@ -39,8 +39,23 @@ const createPost = async () => {
   try {
     const response = await postService.createPost(formData);
     await getAllPosts()
-  } catch (error) {}
+
+    content.value = ''
+  } catch (error) {
+    console.error(error)
+  }
 };
+
+const handleLike = async (postId) => {
+  try {
+    await postService.likePost(postId)
+    console.log(postId)
+
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 </script>
 
 <template>
@@ -98,7 +113,7 @@ const createPost = async () => {
 
         <button
           @click="createPost()"
-          class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-md flex items-center gap-2 transition"
+          class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-md flex items-center gap-2 transition cursor-pointer"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -174,7 +189,7 @@ const createPost = async () => {
       <div class="flex justify-between items-center">
         <div class="flex gap-4">
           <button
-            class="flex items-center gap-2 text-gray-400 hover:text-red-400 py-1 px-2 rounded hover:bg-[#3e4043] transition"
+            @click="handleLike(post.id)" class="flex items-center gap-2 text-gray-400 hover:text-red-400 py-1 px-2 rounded hover:bg-[#3e4043] transition"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

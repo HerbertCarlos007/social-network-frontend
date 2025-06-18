@@ -18,7 +18,14 @@ async function createPost(formdata) {
     }
 }
 
+async function likePost(postId) {
+    const likeData = {
+        post_id: postId
+    }
+    const response = await api.post('likes', likeData)
+    return response
+}
 
 export default {
-    getAllPosts, createPost
+    getAllPosts, createPost, likePost
 }
