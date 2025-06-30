@@ -1,13 +1,16 @@
 <script setup>
-import { faImage } from "@fortawesome/free-solid-svg-icons";
+import { faThumbsUp } from "@fortawesome/free-solid-svg-icons";
+import { faComment } from "@fortawesome/free-solid-svg-icons";
+import { faShare } from "@fortawesome/free-solid-svg-icons";
 import { ref, onMounted } from "vue";
 import postService from "../services/postService";
 
-const faImageIcon = faImage;
 const posts = ref([]);
 
 const content = ref("");
 const file = ref(null);
+
+const showModal = ref(false);
 
 onMounted(async () => {
   getAllPosts();
@@ -49,10 +52,18 @@ const createPost = async () => {
 const toggleLike = async (postId) => {
   try {
     await postService.likePost(postId);
-    await getAllPosts()
+    await getAllPosts();
   } catch (error) {
     console.error(error);
   }
+};
+
+const openModal = (id) => {
+  showModal.value = true;
+};
+
+const closeModal = () => {
+  showModal.value = false;
 };
 </script>
 
@@ -215,6 +226,7 @@ const toggleLike = async (postId) => {
           </button>
 
           <button
+            @click="openModal(post.id)"
             class="flex items-center gap-2 text-gray-400 hover:text-blue-400 py-1 px-2 rounded hover:bg-[#3e4043] transition"
           >
             <svg
@@ -257,8 +269,82 @@ const toggleLike = async (postId) => {
             Compartilhar
           </button>
         </div>
-        <span class="text-sm text-gray-500">{{ post.count_likes }} curtidas</span>
+        <span class="text-sm text-gray-500"
+          >{{ post.count_likes }} curtidas</span
+        >
+      </div>
+    </div>
+  </div>
+
+  <div
+    v-if="showModal"
+    className="fixed inset-0 bg-black/50 flex justify-center items-center z-50"
+  >
+    <div className="bg-[#2e3033] w-2xl rounded-lg p-5 relative">
+      <button
+        @click="openModal(post.id)"
+        className="absolute top-2 right-3 text-white text-xl"
+      >
+        &times;
+      </button>
+
+      <h2 className="text-white text-lg font-semibold mb-4">Post de herbert</h2>
+
+      <div className="w-full h-[1px] bg-white"></div>
+
+      <div className="flex gap-4 mt-4">
+        <img
+          className="w-16 h-16 rounded-full"
+          src="https://cdn.motor1.com/images/mgl/W81RXg/s1/honda-civic-sedan-e-hev-2023.webp"
+          alt=""
+        />
+        <div className="flex flex-col">
+          <span className="text-white">Herbert Carlos</span>
+          <span className="text-white">27 de junho</span>
+        </div>
+      </div>
+
+      <div className="mt-3">
+        <div>
+          <span className="text-white">Testando vw virtus</span>
+          <img
+            className="mt-1 rounded-md w-full"
+            src="https://cdn.motor1.com/images/mgl/W81RXg/s1/honda-civic-sedan-e-hev-2023.webp"
+            alt=""
+          />
+        </div>
+      </div>
+
+      <div class="w-full flex mt-2 justify-between">
+        <section>
+          <div class="flex items-center gap-2">
+            <font-awesome-icon :icon="faThumbsUp" class="text-blue-500" />
+            <span class="text-sm text-gray-300">4 mil</span>
+          </div>
+        </section>
+
+        <section class="flex gap-3">
+          <span class="text-white cursor-pointer">129 comentarios</span>
+          <span class="text-white cursor-pointer">129 compartilhamentos</span>
+        </section>
+      </div>
+      <div className="w-full h-[1px] bg-white mt-3"></div>
+
+      <div class="w-full flex justify-between mt-3">
+        <section class="flex gap-2 text-center justify-center items-center">
+          <font-awesome-icon :icon="faThumbsUp" />
+          <span>Curtir</span>
+        </section>
+        <section class="flex gap-2 text-center justify-center items-center">
+          <font-awesome-icon :icon="faComment" />
+          <span>Comentar</span>
+        </section>
+        <section class="flex gap-2 text-center justify-center items-center">
+          <span>Compartilhar</span>
+          <font-awesome-icon :icon="faShare" />
+        </section>
       </div>
     </div>
   </div>
 </template>
+
