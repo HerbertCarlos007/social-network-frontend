@@ -4,11 +4,14 @@ import { faComment } from "@fortawesome/free-solid-svg-icons";
 import { faShare } from "@fortawesome/free-solid-svg-icons";
 import { ref, onMounted } from "vue";
 import postService from "../services/postService";
+import commentService from "../services/commentService"
 
 const posts = ref([]);
 
 const content = ref("");
 const file = ref(null);
+const postId = ref(0)
+const commentContent = ref("")
 
 const showModal = ref(false);
 
@@ -59,12 +62,22 @@ const toggleLike = async (postId) => {
 };
 
 const openModal = (id) => {
+  postId.value = id
   showModal.value = true;
 };
 
 const closeModal = () => {
   showModal.value = false;
 };
+
+const createComment = async () => {
+  try {
+    await commentService.createComment(postId.value, commentContent.value)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 </script>
 
 <template>
@@ -276,7 +289,7 @@ const closeModal = () => {
     </div>
   </div>
 
-  <div v-if="showModal" class="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+ <div v-if="showModal" class="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
   <div class="bg-[#242526] w-full max-w-lg mx-4 rounded-lg relative max-h-[90vh] overflow-hidden">
     <!-- Header -->
     <div class="flex items-center justify-between p-4 border-b border-gray-600">
@@ -341,14 +354,14 @@ const closeModal = () => {
             </svg>
             <span class="text-sm font-medium">Curtir</span>
           </button>
-          
+
           <button class="flex items-center justify-center gap-2 py-2 px-4 rounded-lg hover:bg-gray-700 text-gray-300 hover:text-white transition-colors flex-1">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd" />
             </svg>
             <span class="text-sm font-medium">Comentar</span>
           </button>
-          
+
           <button class="flex items-center justify-center gap-2 py-2 px-4 rounded-lg hover:bg-gray-700 text-gray-300 hover:text-white transition-colors flex-1">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
@@ -397,17 +410,20 @@ const closeModal = () => {
           <!-- Comment Input -->
           <div class="flex gap-2 mt-4">
             <img class="w-8 h-8 rounded-full" src="https://cdn.motor1.com/images/mgl/W81RXg/s1/honda-civic-sedan-e-hev-2023.webp" alt="You" />
-            <div class="flex-1 relative">
-              <input 
+            <div class="flex-1 flex gap-2">
+              <input
+                v-model="commentContent"
                 type="text" 
                 placeholder="Escreva um comentário público..."
-                class="w-full bg-gray-700 text-white rounded-full px-4 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                class="flex-1 bg-gray-700 text-white rounded-full px-4 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <div class="absolute right-3 top-1/2 transform -translate-y-1/2 flex gap-2">
-                <button class="text-gray-400 hover:text-white">😊</button>
-                <button class="text-gray-400 hover:text-white">📷</button>
-                <button class="text-gray-400 hover:text-white">🎁</button>
-              </div>
+              <button 
+                @click="createComment()"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                :disabled="!commentContent || commentContent.trim() === ''"
+              >
+                Enviar
+              </button>
             </div>
           </div>
         </div>
