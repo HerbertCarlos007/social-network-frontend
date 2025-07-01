@@ -276,75 +276,144 @@ const closeModal = () => {
     </div>
   </div>
 
-  <div
-    v-if="showModal"
-    className="fixed inset-0 bg-black/50 flex justify-center items-center z-50"
-  >
-    <div className="bg-[#2e3033] w-2xl rounded-lg p-5 relative">
-      <button
-        @click="openModal(post.id)"
-        className="absolute top-2 right-3 text-white text-xl"
-      >
+  <div v-if="showModal" class="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+  <div class="bg-[#242526] w-full max-w-lg mx-4 rounded-lg relative max-h-[90vh] overflow-hidden">
+    <!-- Header -->
+    <div class="flex items-center justify-between p-4 border-b border-gray-600">
+      <h2 class="text-white text-xl font-semibold">Post de herbert</h2>
+      <button @click="closeModal()" class="text-gray-400 hover:text-white text-2xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-700">
         &times;
       </button>
+    </div>
 
-      <h2 className="text-white text-lg font-semibold mb-4">Post de herbert</h2>
-
-      <div className="w-full h-[1px] bg-white"></div>
-
-      <div className="flex gap-4 mt-4">
-        <img
-          className="w-16 h-16 rounded-full"
-          src="https://cdn.motor1.com/images/mgl/W81RXg/s1/honda-civic-sedan-e-hev-2023.webp"
-          alt=""
-        />
-        <div className="flex flex-col">
-          <span className="text-white">Herbert Carlos</span>
-          <span className="text-white">27 de junho</span>
-        </div>
-      </div>
-
-      <div className="mt-3">
-        <div>
-          <span className="text-white">Testando vw virtus</span>
+    <!-- Content Area -->
+    <div class="overflow-y-auto max-h-[calc(90vh-120px)]">
+      <!-- Post Header -->
+      <div class="p-4">
+        <div class="flex items-center gap-3 mb-4">
           <img
-            className="mt-1 rounded-md w-full"
+            class="w-10 h-10 rounded-full"
             src="https://cdn.motor1.com/images/mgl/W81RXg/s1/honda-civic-sedan-e-hev-2023.webp"
-            alt=""
+            alt="Herbert Carlos"
+          />
+          <div>
+            <div class="text-white font-semibold text-sm">Herbert Carlos</div>
+            <div class="text-gray-400 text-xs">27 de junho</div>
+          </div>
+        </div>
+
+        <!-- Post Content -->
+        <div class="mb-4">
+          <p class="text-white text-sm mb-3">Testando vw virtus</p>
+          <img
+            class="w-full rounded-lg"
+            src="https://cdn.motor1.com/images/mgl/W81RXg/s1/honda-civic-sedan-e-hev-2023.webp"
+            alt="Post image"
           />
         </div>
-      </div>
 
-      <div class="w-full flex mt-2 justify-between">
-        <section>
+        <!-- Engagement Stats -->
+        <div class="flex items-center justify-between py-2 px-1">
           <div class="flex items-center gap-2">
-            <font-awesome-icon :icon="faThumbsUp" class="text-blue-500" />
-            <span class="text-sm text-gray-300">4 mil</span>
+            <div class="flex items-center gap-1">
+              <div class="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
+                </svg>
+              </div>
+              <span class="text-gray-300 text-sm">4 mil</span>
+            </div>
           </div>
-        </section>
+          <div class="flex items-center gap-4 text-gray-300 text-sm">
+            <span class="hover:underline cursor-pointer">129 comentários</span>
+            <span class="hover:underline cursor-pointer">129 compartilhamentos</span>
+          </div>
+        </div>
 
-        <section class="flex gap-3">
-          <span class="text-white cursor-pointer">129 comentarios</span>
-          <span class="text-white cursor-pointer">129 compartilhamentos</span>
-        </section>
-      </div>
-      <div className="w-full h-[1px] bg-white mt-3"></div>
+        <!-- Divider -->
+        <div class="border-t border-gray-600 my-2"></div>
 
-      <div class="w-full flex justify-between mt-3">
-        <section class="flex gap-2 text-center justify-center items-center">
-          <font-awesome-icon :icon="faThumbsUp" />
-          <span>Curtir</span>
-        </section>
-        <section class="flex gap-2 text-center justify-center items-center">
-          <font-awesome-icon :icon="faComment" />
-          <span>Comentar</span>
-        </section>
-        <section class="flex gap-2 text-center justify-center items-center">
-          <span>Compartilhar</span>
-          <font-awesome-icon :icon="faShare" />
-        </section>
+        <!-- Action Buttons -->
+        <div class="flex items-center justify-around py-2">
+          <button class="flex items-center justify-center gap-2 py-2 px-4 rounded-lg hover:bg-gray-700 text-gray-300 hover:text-white transition-colors flex-1">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
+            </svg>
+            <span class="text-sm font-medium">Curtir</span>
+          </button>
+          
+          <button class="flex items-center justify-center gap-2 py-2 px-4 rounded-lg hover:bg-gray-700 text-gray-300 hover:text-white transition-colors flex-1">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd" />
+            </svg>
+            <span class="text-sm font-medium">Comentar</span>
+          </button>
+          
+          <button class="flex items-center justify-center gap-2 py-2 px-4 rounded-lg hover:bg-gray-700 text-gray-300 hover:text-white transition-colors flex-1">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
+            </svg>
+            <span class="text-sm font-medium">Compartilhar</span>
+          </button>
+        </div>
+
+        <!-- Divider -->
+        <div class="border-t border-gray-600 my-2"></div>
+
+        <!-- Comments Section -->
+        <div class="space-y-3">
+          <div class="flex gap-2">
+            <img class="w-8 h-8 rounded-full" src="https://cdn.motor1.com/images/mgl/W81RXg/s1/honda-civic-sedan-e-hev-2023.webp" alt="User" />
+            <div class="flex-1">
+              <div class="bg-gray-700 rounded-2xl px-3 py-2">
+                <div class="text-white font-semibold text-sm">Tayna Tardin</div>
+                <div class="text-white text-sm">Eu estava vendo vw e o Flamengo apanh feio demais kkkk</div>
+              </div>
+              <div class="flex items-center gap-4 mt-1 ml-3">
+                <span class="text-gray-400 text-xs">1 d</span>
+                <button class="text-gray-400 text-xs hover:underline">Curtir</button>
+                <button class="text-gray-400 text-xs hover:underline">Responder</button>
+                <button class="text-gray-400 text-xs hover:underline">Compartilhar</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex gap-2">
+            <img class="w-8 h-8 rounded-full" src="https://cdn.motor1.com/images/mgl/W81RXg/s1/honda-civic-sedan-e-hev-2023.webp" alt="User" />
+            <div class="flex-1">
+              <div class="bg-gray-700 rounded-2xl px-3 py-2">
+                <div class="text-white font-semibold text-sm">Diego Andrade Martin</div>
+                <div class="text-white text-sm">Jogo equilibrado, uma hora o flamengo apanhava e outra o Raver batia</div>
+              </div>
+              <div class="flex items-center gap-4 mt-1 ml-3">
+                <span class="text-gray-400 text-xs">16 h</span>
+                <button class="text-gray-400 text-xs hover:underline">Curtir</button>
+                <button class="text-gray-400 text-xs hover:underline">Responder</button>
+                <button class="text-gray-400 text-xs hover:underline">Compartilhar</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comment Input -->
+          <div class="flex gap-2 mt-4">
+            <img class="w-8 h-8 rounded-full" src="https://cdn.motor1.com/images/mgl/W81RXg/s1/honda-civic-sedan-e-hev-2023.webp" alt="You" />
+            <div class="flex-1 relative">
+              <input 
+                type="text" 
+                placeholder="Escreva um comentário público..."
+                class="w-full bg-gray-700 text-white rounded-full px-4 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <div class="absolute right-3 top-1/2 transform -translate-y-1/2 flex gap-2">
+                <button class="text-gray-400 hover:text-white">😊</button>
+                <button class="text-gray-400 hover:text-white">📷</button>
+                <button class="text-gray-400 hover:text-white">🎁</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+</div>
 </template>
 
