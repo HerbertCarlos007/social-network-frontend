@@ -26,6 +26,13 @@ async function likePost(postId) {
     return response
 }
 
+async function getPostById(postId) {
+    const response = await api.get(`posts/${postId}`)
+    console.log(response)
+    return response
+}
+
+
 export default {
-    getAllPosts, createPost, likePost
+    getAllPosts, createPost, likePost, getPostById
 }

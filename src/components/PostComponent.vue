@@ -4,14 +4,15 @@ import { faComment } from "@fortawesome/free-solid-svg-icons";
 import { faShare } from "@fortawesome/free-solid-svg-icons";
 import { ref, onMounted } from "vue";
 import postService from "../services/postService";
-import commentService from "../services/commentService"
+import commentService from "../services/commentService";
 
 const posts = ref([]);
+const postById = ref({});
 
 const content = ref("");
 const file = ref(null);
-const postId = ref(0)
-const commentContent = ref("")
+const postId = ref(0);
+const commentContent = ref("");
 
 const showModal = ref(false);
 
@@ -61,10 +62,13 @@ const toggleLike = async (postId) => {
   }
 };
 
-const openModal = (id) => {
-  postId.value = id
+const openModal = async (id) => {
+  postId.value = id;
+  postById.value = {};
+  await getPostById();
   showModal.value = true;
 };
+
 
 const closeModal = () => {
   showModal.value = false;
@@ -72,12 +76,22 @@ const closeModal = () => {
 
 const createComment = async () => {
   try {
-    await commentService.createComment(postId.value, commentContent.value)
+    await commentService.createComment(postId.value, commentContent.value);
+    commentContent.value = "";
+    await getPostById();
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
-}
+};
 
+const getPostById = async () => {
+  try {
+    const response = await postService.getPostById(postId.value);
+    postById.value = response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
 </script>
 
 <template>
@@ -289,147 +303,192 @@ const createComment = async () => {
     </div>
   </div>
 
- <div v-if="showModal" class="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-  <div class="bg-[#242526] w-full max-w-lg mx-4 rounded-lg relative max-h-[90vh] overflow-hidden">
-    <!-- Header -->
-    <div class="flex items-center justify-between p-4 border-b border-gray-600">
-      <h2 class="text-white text-xl font-semibold">Post de herbert</h2>
-      <button @click="closeModal()" class="text-gray-400 hover:text-white text-2xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-700">
-        &times;
-      </button>
-    </div>
+  <div
+    v-if="showModal"
+    class="fixed inset-0 bg-black/50 flex justify-center items-center z-50"
+  >
+    <div
+      v-for="post in postById"
+      :key="post.id"
+      class="bg-[#242526] w-full max-w-lg mx-4 rounded-lg relative max-h-[90vh] overflow-hidden"
+    >
+      <!-- Header -->
+      <div
+        class="flex items-center justify-between p-4 border-b border-gray-600"
+      >
+        <h2 class="text-white text-xl font-semibold">
+          Post de {{ post.name }}
+        </h2>
+        <button
+          @click="closeModal()"
+          class="text-gray-400 hover:text-white text-2xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-700"
+        >
+          &times;
+        </button>
+      </div>
 
-    <!-- Content Area -->
-    <div class="overflow-y-auto max-h-[calc(90vh-120px)]">
-      <!-- Post Header -->
-      <div class="p-4">
-        <div class="flex items-center gap-3 mb-4">
-          <img
-            class="w-10 h-10 rounded-full"
-            src="https://cdn.motor1.com/images/mgl/W81RXg/s1/honda-civic-sedan-e-hev-2023.webp"
-            alt="Herbert Carlos"
-          />
-          <div>
-            <div class="text-white font-semibold text-sm">Herbert Carlos</div>
-            <div class="text-gray-400 text-xs">27 de junho</div>
-          </div>
-        </div>
-
-        <!-- Post Content -->
-        <div class="mb-4">
-          <p class="text-white text-sm mb-3">Testando vw virtus</p>
-          <img
-            class="w-full rounded-lg"
-            src="https://cdn.motor1.com/images/mgl/W81RXg/s1/honda-civic-sedan-e-hev-2023.webp"
-            alt="Post image"
-          />
-        </div>
-
-        <!-- Engagement Stats -->
-        <div class="flex items-center justify-between py-2 px-1">
-          <div class="flex items-center gap-2">
-            <div class="flex items-center gap-1">
-              <div class="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
-                <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
-                </svg>
+      <!-- Content Area -->
+      <div class="overflow-y-auto max-h-[calc(90vh-120px)]">
+        <!-- Post Header -->
+        <div class="p-4">
+          <div class="flex items-center gap-3 mb-4">
+            <img
+              class="w-10 h-10 rounded-full"
+              :src="post.avatar_url"
+              alt="Herbert Carlos"
+            />
+            <div>
+              <div class="text-white font-semibold text-sm">
+                {{ post.name }}
               </div>
-              <span class="text-gray-300 text-sm">4 mil</span>
-            </div>
-          </div>
-          <div class="flex items-center gap-4 text-gray-300 text-sm">
-            <span class="hover:underline cursor-pointer">129 comentários</span>
-            <span class="hover:underline cursor-pointer">129 compartilhamentos</span>
-          </div>
-        </div>
-
-        <!-- Divider -->
-        <div class="border-t border-gray-600 my-2"></div>
-
-        <!-- Action Buttons -->
-        <div class="flex items-center justify-around py-2">
-          <button class="flex items-center justify-center gap-2 py-2 px-4 rounded-lg hover:bg-gray-700 text-gray-300 hover:text-white transition-colors flex-1">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
-            </svg>
-            <span class="text-sm font-medium">Curtir</span>
-          </button>
-
-          <button class="flex items-center justify-center gap-2 py-2 px-4 rounded-lg hover:bg-gray-700 text-gray-300 hover:text-white transition-colors flex-1">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd" />
-            </svg>
-            <span class="text-sm font-medium">Comentar</span>
-          </button>
-
-          <button class="flex items-center justify-center gap-2 py-2 px-4 rounded-lg hover:bg-gray-700 text-gray-300 hover:text-white transition-colors flex-1">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
-            </svg>
-            <span class="text-sm font-medium">Compartilhar</span>
-          </button>
-        </div>
-
-        <!-- Divider -->
-        <div class="border-t border-gray-600 my-2"></div>
-
-        <!-- Comments Section -->
-        <div class="space-y-3">
-          <div class="flex gap-2">
-            <img class="w-8 h-8 rounded-full" src="https://cdn.motor1.com/images/mgl/W81RXg/s1/honda-civic-sedan-e-hev-2023.webp" alt="User" />
-            <div class="flex-1">
-              <div class="bg-gray-700 rounded-2xl px-3 py-2">
-                <div class="text-white font-semibold text-sm">Tayna Tardin</div>
-                <div class="text-white text-sm">Eu estava vendo vw e o Flamengo apanh feio demais kkkk</div>
-              </div>
-              <div class="flex items-center gap-4 mt-1 ml-3">
-                <span class="text-gray-400 text-xs">1 d</span>
-                <button class="text-gray-400 text-xs hover:underline">Curtir</button>
-                <button class="text-gray-400 text-xs hover:underline">Responder</button>
-                <button class="text-gray-400 text-xs hover:underline">Compartilhar</button>
-              </div>
+              <div class="text-gray-400 text-xs">27 de junho</div>
             </div>
           </div>
 
-          <div class="flex gap-2">
-            <img class="w-8 h-8 rounded-full" src="https://cdn.motor1.com/images/mgl/W81RXg/s1/honda-civic-sedan-e-hev-2023.webp" alt="User" />
-            <div class="flex-1">
-              <div class="bg-gray-700 rounded-2xl px-3 py-2">
-                <div class="text-white font-semibold text-sm">Diego Andrade Martin</div>
-                <div class="text-white text-sm">Jogo equilibrado, uma hora o flamengo apanhava e outra o Raver batia</div>
-              </div>
-              <div class="flex items-center gap-4 mt-1 ml-3">
-                <span class="text-gray-400 text-xs">16 h</span>
-                <button class="text-gray-400 text-xs hover:underline">Curtir</button>
-                <button class="text-gray-400 text-xs hover:underline">Responder</button>
-                <button class="text-gray-400 text-xs hover:underline">Compartilhar</button>
-              </div>
-            </div>
+          <!-- Post Content -->
+          <div class="mb-4">
+            <p class="text-white text-sm mb-3">{{ post.content }}</p>
+            <img
+              class="w-full rounded-lg"
+              :src="post.image_post_url"
+              alt="Post image"
+            />
           </div>
 
-          <!-- Comment Input -->
-          <div class="flex gap-2 mt-4">
-            <img class="w-8 h-8 rounded-full" src="https://cdn.motor1.com/images/mgl/W81RXg/s1/honda-civic-sedan-e-hev-2023.webp" alt="You" />
-            <div class="flex-1 flex gap-2">
-              <input
-                v-model="commentContent"
-                type="text" 
-                placeholder="Escreva um comentário público..."
-                class="flex-1 bg-gray-700 text-white rounded-full px-4 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <button 
-                @click="createComment()"
-                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                :disabled="!commentContent || commentContent.trim() === ''"
+          <!-- Engagement Stats -->
+          <div class="flex items-center justify-between py-2 px-1">
+            <div class="flex items-center gap-2">
+              <div class="flex items-center gap-1">
+                <div
+                  class="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center"
+                >
+                  <svg
+                    class="w-3 h-3 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"
+                    />
+                  </svg>
+                </div>
+                <span class="text-gray-300 text-sm">4 mil</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-4 text-gray-300 text-sm">
+              <span class="hover:underline cursor-pointer"
+                >129 comentários</span
               >
-                Enviar
-              </button>
+              <span class="hover:underline cursor-pointer"
+                >129 compartilhamentos</span
+              >
+            </div>
+          </div>
+
+          <!-- Divider -->
+          <div class="border-t border-gray-600 my-2"></div>
+
+          <!-- Action Buttons -->
+          <div class="flex items-center justify-around py-2">
+            <button
+              class="flex items-center justify-center gap-2 py-2 px-4 rounded-lg hover:bg-gray-700 text-gray-300 hover:text-white transition-colors flex-1"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"
+                />
+              </svg>
+              <span class="text-sm font-medium">Curtir</span>
+            </button>
+
+            <button
+              class="flex items-center justify-center gap-2 py-2 px-4 rounded-lg hover:bg-gray-700 text-gray-300 hover:text-white transition-colors flex-1"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fill-rule="evenodd"
+                  d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <span class="text-sm font-medium">Comentar</span>
+            </button>
+
+            <button
+              class="flex items-center justify-center gap-2 py-2 px-4 rounded-lg hover:bg-gray-700 text-gray-300 hover:text-white transition-colors flex-1"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"
+                />
+              </svg>
+              <span class="text-sm font-medium">Compartilhar</span>
+            </button>
+          </div>
+
+          <!-- Divider -->
+          <div class="border-t border-gray-600 my-2"></div>
+
+          <!-- Comments Section -->
+          <div class="space-y-3">
+            <div
+              v-for="(comment, index) in post.comments"
+              :key="index"
+              class="flex gap-2"
+            >
+              <img
+                class="w-8 h-8 rounded-full"
+                :src="comment.user.avatar_url"
+                alt="User"
+              />
+              <div class="flex-1">
+                <div class="bg-gray-700 rounded-2xl px-3 py-2">
+                  <div class="text-white font-semibold text-sm">
+                    {{ comment.user.name }} 
+                  </div>
+                  <div class="text-white text-sm">{{ comment.content }}</div>
+                </div>
+                <div class="flex items-center gap-4 mt-1 ml-3">
+                  <span class="text-gray-400 text-xs">1 d</span>
+                  <button class="text-gray-400 text-xs hover:underline">
+                    Curtir
+                  </button>
+                  <button class="text-gray-400 text-xs hover:underline">
+                    Responder
+                  </button>
+                  <button class="text-gray-400 text-xs hover:underline">
+                    Compartilhar
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Comment Input -->
+            <div class="flex gap-2 mt-4">
+              <img
+                class="w-8 h-8 rounded-full"
+                src="https://cdn.motor1.com/images/mgl/W81RXg/s1/honda-civic-sedan-e-hev-2023.webp"
+                alt="You"
+              />
+              <div class="flex-1 flex gap-2">
+                <input
+                  v-model="commentContent"
+                  type="text"
+                  placeholder="Escreva um comentário público..."
+                  class="flex-1 bg-gray-700 text-white rounded-full px-4 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button
+                  @click="createComment()"
+                  class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  :disabled="!commentContent || commentContent.trim() === ''"
+                >
+                  Enviar
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 </template>
-
