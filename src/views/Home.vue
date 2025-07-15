@@ -1,12 +1,20 @@
 <script setup>
+import { ref } from "vue";
+import FriendshipComponent from "../components/FriendshipComponent.vue";
 import PostComponent from "../components/PostComponent.vue";
 import SidebarVue from "../components/Sidebar.vue";
+
+const activeComponent = ref("posts");
+
+function onOptionSelected(option) {
+  activeComponent.value = option;
+}
 </script>
 
 <template>
-    <div class="flex h-screen bg-[#1c1e21]">
-        <SidebarVue/>
-        <PostComponent/>
-    </div>
-   
+  <div class="flex h-screen bg-[#1c1e21]">
+    <SidebarVue @selectedOption="onOptionSelected" />
+    <PostComponent v-if="activeComponent === 'posts'" />
+    <FriendshipComponent v-if="activeComponent === 'friendships'" />
+  </div>
 </template>

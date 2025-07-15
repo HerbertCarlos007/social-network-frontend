@@ -1,4 +1,12 @@
-<script setup></script>
+<script setup>
+import { defineEmits } from "vue";
+
+const emit = defineEmits(["selectedOption"]);
+
+function selectOption(option) {
+  emit("selectedOption", option);
+}
+</script>
 
 <template>
   <div class="flex h-screen bg-[#1c1e21]">
@@ -11,6 +19,7 @@
         <a
           href="#"
           class="flex items-center px-4 py-3 font-medium rounded-lg hover:bg-[#2e3033] transition-colors"
+          @click="selectOption('posts')"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -32,6 +41,7 @@
         <a
           href="#"
           class="flex items-center px-4 py-3 font-medium rounded-lg hover:bg-[#2e3033] transition-colors"
+          @click="selectOption('messages')"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -54,6 +64,7 @@
         <a
           href="#"
           class="flex items-center px-4 py-3 font-medium rounded-lg hover:bg-[#2e3033] transition-colors"
+          @click="selectOption('notifications')"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -72,9 +83,36 @@
           </svg>
           Notificações
         </a>
+
         <a
           href="#"
           class="flex items-center px-4 py-3 font-medium rounded-lg hover:bg-[#2e3033] transition-colors"
+          @click="selectOption('friendships')"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="mr-3"
+          >
+            <circle cx="9" cy="7" r="4"></circle>
+            <circle cx="17" cy="7" r="4"></circle>
+            <path d="M1 21v-2a4 4 0 0 1 4-4h4"></path>
+            <path d="M15 21v-2a4 4 0 0 1 4-4h2"></path>
+          </svg>
+          Amizades
+        </a>
+
+        <a
+          href="#"
+          class="flex items-center px-4 py-3 font-medium rounded-lg hover:bg-[#2e3033] transition-colors"
+          @click="selectOption('perfil')"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
