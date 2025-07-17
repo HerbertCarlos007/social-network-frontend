@@ -3,6 +3,7 @@ import { ref, onMounted } from "vue";
 import friendshipService from "../services/friendshipService";
 
 const friendships = ref([]);
+const activeTab = ref("pedidos");
 
 onMounted(async () => {
   getAllFriendShipRequest();
@@ -17,29 +18,31 @@ const getAllFriendShipRequest = async () => {
   }
 };
 
+const changeTab = (tab) => {
+  activeTab.value = tab;
+};
 const acceptFriendRequest = async (id) => {
   try {
-    await friendshipService.acceptFriendRequest(id)
+    await friendshipService.acceptFriendRequest(id);
     getAllFriendShipRequest();
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
-}
+};
 
 const rejectFriendRequest = async (id) => {
   try {
-    await friendshipService.rejectFriendRequest(id)
+    await friendshipService.rejectFriendRequest(id);
     getAllFriendShipRequest();
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
-
+};
 </script>
 
 <template>
   <div
-    class="flex min-h-screen w-full items-center justify-center bg-[#1a1a1a] p-4 text-white md:p-8"
+    class="flex min-h-screen w-full justify-center bg-[#1a1a1a] p-4 text-white md:p-8"
   >
     <div
       class="w-full max-w-3xl rounded-lg border border-[#2a2a2a] bg-[#1a1a1a] shadow-lg"
@@ -53,17 +56,42 @@ const rejectFriendRequest = async (id) => {
       <div class="p-4">
         <div class="w-full">
           <div class="grid w-full grid-cols-3 rounded-lg bg-[#2a2a2a] p-1">
-            <button class="rounded-md bg-blue-600 px-4 py-2 text-white">
+            <button
+              @click="changeTab('pedidos')"
+              :class="
+                activeTab === 'pedidos'
+                  ? 'bg-blue-600 text-white'
+                  : 'text-white hover:bg-[#3a3a3a]'
+              "
+              class="rounded-md px-4 py-2"
+            >
               Pedidos de Amizade
             </button>
-            <button class="rounded-md px-4 py-2 text-white hover:bg-[#3a3a3a]">
+            <button
+              @click="changeTab('amizades')"
+              :class="
+                activeTab === 'amizades'
+                  ? 'bg-blue-600 text-white'
+                  : 'text-white hover:bg-[#3a3a3a]'
+              "
+              class="rounded-md px-4 py-2"
+            >
               Minhas Amizades
             </button>
-            <button class="rounded-md px-4 py-2 text-white hover:bg-[#3a3a3a]">
+            <button
+              @click="changeTab('pessoas')"
+              :class="
+                activeTab === 'pessoas'
+                  ? 'bg-blue-600 text-white'
+                  : 'text-white hover:bg-[#3a3a3a]'
+              "
+              class="rounded-md px-4 py-2"
+            >
               Pessoas para Adicionar
             </button>
           </div>
-          <div class="mt-4">
+
+          <div v-if="activeTab === 'pedidos'" class="mt-4">
             <div class="h-[calc(100vh-250px)] overflow-y-auto pr-4">
               <div class="space-y-4">
                 <div
@@ -105,6 +133,18 @@ const rejectFriendRequest = async (id) => {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <div v-if="activeTab === 'amizades'" class="mt-4">
+            <div class="text-center text-gray-400 py-10">
+              <p>Você ainda não tem amizades exibidas aqui.</p>
+            </div>
+          </div>
+
+          <div v-if="activeTab === 'pessoas'" class="mt-4">
+            <div class="text-center text-gray-400 py-10">
+              <p>Nenhuma sugestão de amizade no momento.</p>
             </div>
           </div>
         </div>
