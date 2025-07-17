@@ -10,6 +10,11 @@ async function acceptFriendRequest(id) {
     return response.data
 }
 
+async function rejectFriendRequest(id) {
+    const response = await api.post(`friend-request/reject/${id}`)
+    return response.data
+}
+
 export default {
-    getAllFriendshipRequest, acceptFriendRequest
+    getAllFriendshipRequest, acceptFriendRequest, rejectFriendRequest
 }

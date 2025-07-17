@@ -26,6 +26,15 @@ const acceptFriendRequest = async (id) => {
   }
 }
 
+const rejectFriendRequest = async (id) => {
+  try {
+    await friendshipService.rejectFriendRequest(id)
+    getAllFriendShipRequest();
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 </script>
 
 <template>
@@ -88,6 +97,7 @@ const acceptFriendRequest = async (id) => {
                       Aceitar
                     </button>
                     <button
+                      @click="rejectFriendRequest(friendship.user.id)"
                       class="rounded-lg border border-gray-500 bg-transparent px-3 py-1.5 text-gray-300 hover:bg-gray-700"
                     >
                       Recusar
