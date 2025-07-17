@@ -5,6 +5,11 @@ async function getAllFriendshipRequest() {
     return response.data
 }
 
+async function acceptFriendRequest(id) {
+    const response = await api.post(`friend-request/accept/${id}`)
+    return response.data
+}
+
 export default {
-    getAllFriendshipRequest
+    getAllFriendshipRequest, acceptFriendRequest
 }

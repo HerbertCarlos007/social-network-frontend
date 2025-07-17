@@ -16,6 +16,16 @@ const getAllFriendShipRequest = async () => {
     console.error("Erro ao buscar pedidos de amizades:", error);
   }
 };
+
+const acceptFriendRequest = async (id) => {
+  try {
+    await friendshipService.acceptFriendRequest(id)
+    getAllFriendShipRequest();
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 </script>
 
 <template>
@@ -72,6 +82,7 @@ const getAllFriendShipRequest = async () => {
                   </div>
                   <div class="flex gap-2">
                     <button
+                      @click="acceptFriendRequest(friendship.user.id)"
                       class="rounded-lg bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700"
                     >
                       Aceitar
