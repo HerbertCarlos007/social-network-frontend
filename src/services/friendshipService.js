@@ -1,5 +1,10 @@
 import api from "./api";
 
+async function getAllFriends() {
+    const response = await api.get('friends')
+    return response.data
+}
+
 async function getAllFriendshipRequest() {
     const response = await api.get('friend-requests')
     return response.data
@@ -15,6 +20,11 @@ async function rejectFriendRequest(id) {
     return response.data
 }
 
+async function deleteFriend(id) {
+     const response = await api.delete(`friend-delete/${id}`)
+      return response.data
+}
+
 export default {
-    getAllFriendshipRequest, acceptFriendRequest, rejectFriendRequest
+    getAllFriends, getAllFriendshipRequest, acceptFriendRequest, rejectFriendRequest, deleteFriend
 }
