@@ -1,8 +1,11 @@
 import axios from "axios"
+import { startLoading, stopLoading } from '../stores/loadingStore'
 
 const api = axios.create({
-    baseURL: import.meta.env.VITE_BASE_URL
+  baseURL: import.meta.env.VITE_BASE_URL
 })
+
+let activeRequests = 0
 
 api.interceptors.request.use(
   (config) => {
@@ -10,11 +13,30 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    return config;
+
+    activeRequests++
+    startLoading()
+
+    return config
   },
   (error) => {
-    return Promise.reject(error);
+    activeRequests--
+    if (activeRequests <= 0) stopLoading()
+    return Promise.reject(error)
   }
-);
+)
+
+api.interceptors.response.use(
+  (response) => {
+    activeRequests--
+    if (activeRequests <= 0) stopLoading()
+    return response
+  },
+  (error) => {
+    activeRequests--
+    if (activeRequests <= 0) stopLoading()
+    return Promise.reject(error)
+  }
+)
 
 export default api

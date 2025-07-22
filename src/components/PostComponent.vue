@@ -5,6 +5,7 @@ import { faShare } from "@fortawesome/free-solid-svg-icons";
 import { ref, onMounted } from "vue";
 import postService from "../services/postService";
 import commentService from "../services/commentService";
+import { isLoading } from "../stores/loadingStore";
 
 const posts = ref([]);
 const postById = ref({});
@@ -69,7 +70,6 @@ const openModal = async (id) => {
   showModal.value = true;
 };
 
-
 const closeModal = () => {
   showModal.value = false;
 };
@@ -98,6 +98,17 @@ const getPostById = async () => {
   <div
     class="w-full h-screen flex flex-col items-center gap-5 bg-[#1c1e21] overflow-auto mb-5"
   >
+    <div
+      v-if="isLoading"
+      class="fixed top-0 left-0 w-full h-full flex items-center justify-center"
+    >
+      <div class="flex flex-col items-center">
+        <div
+          class="w-12 h-12 border-4 border-t-transparent border-white rounded-full animate-spin"
+        ></div>
+        <p class="mt-4 text-white font-semibold">Carregando...</p>
+      </div>
+    </div>
     <!-- Área de criação de post melhorada -->
     <div
       class="w-[550px] bg-[#2e3033] rounded-lg mt-5 shadow-2xl border border-white/10"
@@ -444,7 +455,7 @@ const getPostById = async () => {
               <div class="flex-1">
                 <div class="bg-gray-700 rounded-2xl px-3 py-2">
                   <div class="text-white font-semibold text-sm">
-                    {{ comment.user.name }} 
+                    {{ comment.user.name }}
                   </div>
                   <div class="text-white text-sm">{{ comment.content }}</div>
                 </div>
