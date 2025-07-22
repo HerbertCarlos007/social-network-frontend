@@ -10,6 +10,11 @@ async function getAllFriendshipRequest() {
     return response.data
 }
 
+async function requestFriendship(id) {
+    const response = await api.post(`friend-request/send/${id}`)
+    return response.data
+}
+
 async function acceptFriendRequest(id) {
     const response = await api.post(`friend-request/accept/${id}`)
     return response.data
@@ -25,6 +30,11 @@ async function deleteFriend(id) {
       return response.data
 }
 
+async function getNonFriends() {
+    const response = await api.get('non-friends')
+    return response.data
+}
+
 export default {
-    getAllFriends, getAllFriendshipRequest, acceptFriendRequest, rejectFriendRequest, deleteFriend
+    getAllFriends, getAllFriendshipRequest, acceptFriendRequest, rejectFriendRequest, deleteFriend, getNonFriends, requestFriendship
 }

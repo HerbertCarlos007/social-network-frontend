@@ -4,6 +4,7 @@ import friendshipService from "../services/friendshipService";
 
 const friendshipsRequest = ref([]);
 const friends = ref([]);
+const nonFriends = ref([]);
 const activeTab = ref("pedidos");
 
 onMounted(async () => {
@@ -15,6 +16,15 @@ const getAllFriends = async () => {
     const response = await friendshipService.getAllFriends();
     friends.value = response;
   } catch (error) {}
+};
+
+const getNonFriends = async () => {
+  try {
+    const response = await friendshipService.getNonFriends();
+    nonFriends.value = response;
+  } catch (error) {
+    console.error("Erro ao buscar pessoas:", error);
+  }
 };
 
 const getAllFriendShipRequest = async () => {
@@ -37,9 +47,19 @@ const changeTab = (tab) => {
       getAllFriends();
       break;
     case "pessoas":
+      getNonFriends();
       break;
     default:
       getAllFriendShipRequest();
+  }
+};
+
+const requestFriendship = async (id) => {
+  try {
+    await friendshipService.requestFriendship(id);
+    getNonFriends();
+  } catch (error) {
+    console.error("Erro ao enviar pedido de amizade:", error);
   }
 };
 
@@ -63,13 +83,12 @@ const rejectFriendRequest = async (id) => {
 
 const deleteFriend = async (id) => {
   try {
-    await friendshipService.deleteFriend(id)
-    getAllFriends()
+    await friendshipService.deleteFriend(id);
+    getAllFriends();
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 };
-
 </script>
 
 <template>
@@ -219,8 +238,33 @@ const deleteFriend = async (id) => {
           </div>
 
           <div v-if="activeTab === 'pessoas'" class="mt-4">
-            <div class="text-center text-gray-400 py-10">
-              <p>Nenhuma sugestão de amizade no momento.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div
+                v-for="nonFriend in nonFriends"
+                :key="nonFriend.id"
+                class="bg-[#3a3a3a] border border-[#4a4a4a] text-white flex flex-col items-center p-4 rounded-lg shadow-md"
+              >
+                <div
+                  class="w-20 h-20 mb-4 border-2 border-blue-500 rounded-full overflow-hidden flex items-center justify-center"
+                >
+                  <img
+                    :src="nonFriend.avatar_url"
+                    alt="Avatar"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <h3 class="text-xl font-semibold mb-1">
+                  {{ nonFriend.name }}
+                </h3>
+                <div class="flex gap-2">
+                  <button
+                    @click="requestFriendship(nonFriend.id)"
+                    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white bg-transparent h-10 px-4 py-2"
+                  >
+                    Adicionar
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
