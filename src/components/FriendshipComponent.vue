@@ -58,7 +58,7 @@ const changeTab = (tab) => {
 const requestFriendship = async (id) => {
   try {
     await friendshipService.requestFriendship(id);
-    getNonFriends();
+    await getNonFriends();
   } catch (error) {
     console.error("Erro ao enviar pedido de amizade:", error);
   }
@@ -67,7 +67,7 @@ const requestFriendship = async (id) => {
 const acceptFriendRequest = async (id) => {
   try {
     await friendshipService.acceptFriendRequest(id);
-    getAllFriendShipRequest();
+    await getAllFriendShipRequest();
   } catch (error) {
     console.error(error);
   }
@@ -76,7 +76,7 @@ const acceptFriendRequest = async (id) => {
 const rejectFriendRequest = async (id) => {
   try {
     await friendshipService.rejectFriendRequest(id);
-    getAllFriendShipRequest();
+    await getAllFriendShipRequest();
   } catch (error) {
     console.log(error);
   }
@@ -85,7 +85,7 @@ const rejectFriendRequest = async (id) => {
 const deleteFriend = async (id) => {
   try {
     await friendshipService.deleteFriend(id);
-    getAllFriends();
+    await getAllFriends();
   } catch (error) {
     console.error(error);
   }
