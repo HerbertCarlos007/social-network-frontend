@@ -1,11 +1,11 @@
 <script setup>
 import { reactive, ref } from "vue";
 import userService from "../services/userService";
-import {useRouter} from 'vue-router'
+import { useRouter } from "vue-router";
+import { isLoading } from "../stores/loadingStore";
 
 const showRegister = ref(false);
-const router = useRouter()
-
+const router = useRouter();
 
 const loginForm = reactive({
   email: "",
@@ -29,7 +29,7 @@ async function handleLogin(e) {
   try {
     const response = await userService.login(loginForm);
     localStorage.setItem("token", response.data.access_token);
-    router.push('/home')
+    router.push("/home");
   } catch (error) {
     errorMessage.value = error.response?.data?.message || "Erro no login";
   }
@@ -56,6 +56,17 @@ function toggleForm() {
   <div
     class="h-screen w-screen flex items-center justify-center bg-gradient-to-br from-purple-600 to-indigo-700 px-4"
   >
+    <div
+      v-if="isLoading"
+      class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black opacity-80"
+    >
+      <div class="flex flex-col items-center">
+        <div
+          class="w-12 h-12 border-4 border-t-transparent border-white rounded-full animate-spin"
+        ></div>
+        <p class="mt-4 text-white font-semibold">Carregando...</p>
+      </div>
+    </div>
     <div class="max-w-md w-full bg-white rounded-lg shadow-xl p-8">
       <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">
         {{
