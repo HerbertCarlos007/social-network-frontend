@@ -218,13 +218,13 @@ const deleteFriend = async (id) => {
                   class="w-20 h-20 mb-4 border-2 border-blue-500 rounded-full overflow-hidden flex items-center justify-center"
                 >
                   <img
-                    :src="friend.user.avatar_url"
+                    :src="friend.avatar_url"
                     alt="Avatar de João Silva"
                     class="w-full h-full object-cover"
                   />
                 </div>
                 <h3 class="text-xl font-semibold mb-1">
-                  {{ friend.user.name }}
+                  {{ friend.name }}
                 </h3>
                 <div class="flex gap-2">
                   <button
@@ -233,7 +233,7 @@ const deleteFriend = async (id) => {
                     Ver Perfil
                   </button>
                   <button
-                    @click="deleteFriend(friend.user.id)"
+                    @click="deleteFriend(friend.id)"
                     class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-red-600 text-white hover:bg-red-700 h-10 px-4 py-2"
                   >
                     Remover
