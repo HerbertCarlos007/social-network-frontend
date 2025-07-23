@@ -100,7 +100,7 @@ const getPostById = async () => {
   >
     <div
       v-if="isLoading"
-      class="fixed top-0 left-0 w-full h-full flex items-center justify-center"
+      class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black opacity-80"
     >
       <div class="flex flex-col items-center">
         <div
@@ -109,6 +109,7 @@ const getPostById = async () => {
         <p class="mt-4 text-white font-semibold">Carregando...</p>
       </div>
     </div>
+
     <!-- Área de criação de post melhorada -->
     <div
       class="w-[550px] bg-[#2e3033] rounded-lg mt-5 shadow-2xl border border-white/10"

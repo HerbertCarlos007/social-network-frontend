@@ -98,7 +98,7 @@ const deleteFriend = async (id) => {
   >
     <div
       v-if="isLoading"
-      class="fixed top-0 left-0 w-full h-full flex items-center justify-center"
+      class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black opacity-80"
     >
       <div class="flex flex-col items-center">
         <div
