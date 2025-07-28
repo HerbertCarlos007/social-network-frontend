@@ -15,9 +15,10 @@ const loginForm = reactive({
 const registerForm = reactive({
   name: "",
   email: "",
-  avatar_url: "",
   password: "",
 });
+
+const file = ref(null);
 
 const errorMessage = ref("");
 const registerErrorMessage = ref("");
@@ -35,12 +36,28 @@ async function handleLogin(e) {
   }
 }
 
+const handleFileChange = (event) => {
+  const target = event.target;
+  if (target.files && target.files.length > 0) {
+    file.value = target.files[0];
+  }
+};
+
 async function handleRegister(e) {
   e.preventDefault();
   registerErrorMessage.value = "";
 
   try {
-    await userService.register(registerForm);
+    const formData = new FormData();
+    formData.append("name", registerForm.name);
+    formData.append("email", registerForm.email);
+    formData.append("password", registerForm.password);
+    if (file.value) {
+      formData.append("avatar_url", file.value); // Campo que será lido no backend
+    }
+    
+    await userService.register(formData, { isFormData: true });
+    router.push("/home");
   } catch (error) {
     registerErrorMessage.value =
       error.response?.data?.message || "Erro no cadastro";
@@ -148,15 +165,15 @@ function toggleForm() {
         </div>
 
         <div>
-          <label for="avatar_url" class="block text-gray-700 font-medium mb-2"
-            >URL do Avatar (opcional)</label
-          >
+          <label for="avatar" class="block text-gray-700 font-medium mb-2">
+            Avatar (imagem)
+          </label>
           <input
-            v-model="registerForm.avatar_url"
-            type="url"
-            id="avatar_url"
-            placeholder="https://exemplo.com/avatar.jpg"
-            class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            @change="handleFileChange"
+            type="file"
+            id="avatar"
+            accept="image/*"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
 

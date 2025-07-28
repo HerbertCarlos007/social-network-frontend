@@ -1,8 +1,12 @@
 import api from "./api";
 
-async function login(data) {
-    const response = await api.post('login', data)
-    return response
+async function login(formdata) {
+    try {
+        const response = await api.post('login', formdata)
+        return response
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 async function register(data) {

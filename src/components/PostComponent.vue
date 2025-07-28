@@ -1,7 +1,4 @@
 <script setup>
-import { faThumbsUp } from "@fortawesome/free-solid-svg-icons";
-import { faComment } from "@fortawesome/free-solid-svg-icons";
-import { faShare } from "@fortawesome/free-solid-svg-icons";
 import { ref, onMounted } from "vue";
 import postService from "../services/postService";
 import commentService from "../services/commentService";
