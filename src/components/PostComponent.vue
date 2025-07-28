@@ -14,6 +14,8 @@ const commentContent = ref("");
 
 const showModal = ref(false);
 
+const avatarUrl = localStorage.getItem("avatar")
+
 onMounted(async () => {
   getAllPosts();
 });
@@ -115,7 +117,7 @@ const getPostById = async () => {
         <div>
           <img
             class="w-16 h-16 rounded-full"
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRP6dAmZvF5keJskLHMoTNuKK30HfA-iVV50Q&s"
+            :src="avatarUrl"
             alt="avatar"
           />
         </div>
@@ -190,7 +192,7 @@ const getPostById = async () => {
           <div>
             <img
               class="w-12 h-12 rounded-full"
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRP6dAmZvF5keJskLHMoTNuKK30HfA-iVV50Q&s"
+              :src="post.avatar_url"
               alt="avatar"
             />
           </div>
