@@ -112,7 +112,7 @@ function selectOption(option) {
         <a
           href="#"
           class="flex items-center px-4 py-3 font-medium rounded-lg hover:bg-[#2e3033] transition-colors"
-          @click="selectOption('perfil')"
+          @click="selectOption('profile')"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
