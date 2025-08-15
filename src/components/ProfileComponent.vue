@@ -1,7 +1,9 @@
-<script setup></script>
+<script setup>
+import AboutProfileComponent from "./AboutProfileComponent.vue";
+</script>
 
 <template>
-  <div class="w-full h-screen">
+  <div class="w-full min-h-screen overflow-y-auto pb-8">
     <header class="w-full h-80">
       <img
         class="w-full h-full object-cover"
@@ -31,6 +33,8 @@
         </button>
       </section>
     </div>
+
+    <AboutProfileComponent></AboutProfileComponent>
   </div>
 </template>
 
