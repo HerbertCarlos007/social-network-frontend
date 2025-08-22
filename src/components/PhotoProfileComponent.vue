@@ -1,7 +1,7 @@
 <script setup></script>
 
 <template>
-  <div class="w-[310px] bg-[#2e3033] ml-20 p-4 rounded-lg shadow-lg mt-5">
+  <div class="w-[310px] bg-[#2e3033] ml-20 p-5 rounded-lg shadow-lg mt-5">
     <div class="flex justify-between items-center">
       <span class="text-white font-semibold">Fotos</span>
       <span class="text-blue-400 text-sm cursor-pointer hover:underline"
