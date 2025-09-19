@@ -15,6 +15,7 @@ const commentContent = ref("");
 const showModal = ref(false);
 
 const avatarUrl = localStorage.getItem("avatar")
+const name = localStorage.getItem("name")
 
 onMounted(async () => {
   getAllPosts();
@@ -124,7 +125,7 @@ const getPostById = async () => {
         <input
           v-model="content"
           type="text"
-          placeholder="No que você está pensando, Bill?"
+          :placeholder="`No que você está pensando, ${name}?`"
           class="flex-1 p-3 rounded-lg bg-[#5a5c5f] text-white placeholder-white/70 focus:outline-none focus:bg-[#6a6c6f] transition"
         />
       </div>

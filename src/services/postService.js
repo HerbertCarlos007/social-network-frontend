@@ -5,6 +5,11 @@ async function getAllPosts() {
     return response
 }
 
+async function getUserPosts() {
+    const response = await api.get('user-posts')
+    return response
+}
+
 async function createPost(formdata) {
     try {
         const response = await api.post('posts', formdata, {
@@ -34,5 +39,5 @@ async function getPostById(postId) {
 
 
 export default {
-    getAllPosts, createPost, likePost, getPostById
+    getAllPosts, createPost, likePost, getPostById, getUserPosts
 }

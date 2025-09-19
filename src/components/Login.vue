@@ -31,6 +31,7 @@ async function handleLogin(e) {
     const response = await userService.login(loginForm);
     localStorage.setItem("token", response.data.access_token);
     localStorage.setItem("avatar", response.data.user.avatar_url);
+    localStorage.setItem("name", response.data.user.name);
     router.push("/home");
   } catch (error) {
     errorMessage.value = error.response?.data?.message || "Erro no login";

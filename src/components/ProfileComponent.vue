@@ -1,11 +1,46 @@
 <script setup>
+import { ref, onMounted } from "vue";
 import AboutProfileComponent from "./AboutProfileComponent.vue";
 import PhotoProfileComponent from "./PhotoProfileComponent.vue";
 import FriendshipProfileComponent from "./FriendshipProfileComponent.vue";
+import postService from "../services/postService";
+import {isLoading} from '../stores/loadingStore'
+
+const userPosts = ref([]);
+
+const avatarUrl = localStorage.getItem("avatar")
+const name = localStorage.getItem("name")
+
+const getUserPosts = async () => {
+  try {
+    const response = await postService.getUserPosts();
+    userPosts.value = response.data.data;
+  } catch (error) {
+    console.error("Erro ao buscar posts:", error);
+  }
+};
+
+
+onMounted(async () => {
+  getUserPosts()
+});
 </script>
 
 <template>
   <div class="w-full min-h-screen overflow-y-auto pb-8">
+
+    <div
+      v-if="isLoading"
+      class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black opacity-80"
+    >
+      <div class="flex flex-col items-center">
+        <div
+          class="w-12 h-12 border-4 border-t-transparent border-white rounded-full animate-spin"
+        ></div>
+        <p class="mt-4 text-white font-semibold">Carregando...</p>
+      </div>
+    </div>
+
     <header class="w-full h-80">
       <img
         class="w-full h-full object-cover"
@@ -18,8 +53,8 @@ import FriendshipProfileComponent from "./FriendshipProfileComponent.vue";
       <section class="flex items-center justify-center w-1/3 gap-4">
         <img
           class="w-32 h-32 rounded-full border-4 border-white relative bottom-10"
-          src="https://wallpapers.com/images/hd/awesome-pictures-k287z98ruunquo28.jpg"
-          alt=""
+          :src="avatarUrl"
+           alt="avatar"
         />
         <span class="text-white text-lg font-semibold">200 amigos</span>
       </section>
@@ -53,27 +88,29 @@ import FriendshipProfileComponent from "./FriendshipProfileComponent.vue";
               src="https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
             />
             <div class="bg-gray-600 w-full rounded-lg p-5">
-              No que você está pensando, João?
+              No que você está pensando {{ name }}?
             </div>
           </div>
         </div>
 
-        <div class="bg-[#2e3033] p-6 rounded-lg shadow-lg">
+        <div v-for="post in userPosts"
+      :key="post.id" class="bg-[#2e3033] p-6 rounded-lg shadow-lg">
           <div class="flex items-center gap-2 mb-4">
-            <div class="w-10 h-10 rounded-full bg-gray-500"></div>
+            <img :src="post.avatar_url"
+              alt="avatar" class="w-10 h-10 rounded-full"/>
             <div>
-              <p class="text-white font-medium">João Silva</p>
-              <p class="text-gray-400 text-sm">há 2 semanas</p>
+              <p class="text-white font-medium">{{ post.name }}</p>
+              <p class="text-gray-400 text-sm">{{ post.created_at }}</p>
             </div>
           </div>
 
-          <p class="text-white mb-4">Trabalhando em um novo projeto com PHP!</p>
+          <p class="text-white mb-4">{{ post.content }}</p>
 
           <div class="border-t border-gray-600 my-4"></div>
 
           <img
-            src="https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
-            alt="Imagem do projeto PHP"
+            :src="post.image_post_url"
+            alt="post imagem"
             class="w-full h-1/6 rounded-lg object-cover"
           />
 
@@ -139,9 +176,11 @@ import FriendshipProfileComponent from "./FriendshipProfileComponent.vue";
               <span class="text-white"> Compartilhar</span>
             </section>
 
-            <section class="flex items-center gap-2">15 curtidas</section>
+            <section class="flex items-center gap-2">{{ post.count_likes }} curtidas</section>
           </div>
         </div>
+
+
       </div>
     </div>
   </div>
