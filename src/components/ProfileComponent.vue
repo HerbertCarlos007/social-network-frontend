@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, reactive } from "vue";
 import AboutProfileComponent from "./AboutProfileComponent.vue";
 import PhotoProfileComponent from "./PhotoProfileComponent.vue";
 import FriendshipProfileComponent from "./FriendshipProfileComponent.vue";
@@ -19,7 +19,6 @@ const getUserPosts = async () => {
     console.error("Erro ao buscar posts:", error);
   }
 };
-
 
 onMounted(async () => {
   getUserPosts()

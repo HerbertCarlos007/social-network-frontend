@@ -1,4 +1,38 @@
-<script setup></script>
+<script setup>
+import { ref, onMounted, reactive } from "vue";
+import aboutMeService from "../services/aboutMeService";
+
+const aboutMe = ref(null);
+
+const aboutMeForm = reactive({
+  about: "",
+  works_at: "",
+  studied_at: "",
+  lives_in: "",
+});
+
+const createAboutMe = async () => {
+  try {
+    await aboutMeService.createAboutMe(aboutMeForm);
+  } catch (error) {
+    console.error("Erro ao buscar posts:", error);
+  }
+};
+
+const getAboutMe = async () => {
+  try {
+    const response = await aboutMeService.getAboutMe();
+    aboutMe.value = response.data.data;
+  } catch (error) {
+    console.error("Erro ao buscar posts:", error);
+  }
+};
+
+onMounted(async () => {
+  getAboutMe()
+});
+
+</script>
 
 <template>
   <div class="w-[310px] bg-[#2e3033] ml-20 p-4 rounded-lg shadow-lg">
@@ -6,12 +40,11 @@
 
     <div class="flex flex-col gap-2 mt-4 text-white">
       <span
-        >Desenvolvedor Full Stack apaixonado por tecnologia. Sempre aprendendo
-        algo novo!</span
+        >{{ aboutMe?.about }}</span
       >
-      <span>Trabalha na Tech Solutions</span>
-      <span>Estudou na Universidade de São Paulo</span>
-      <span>Mora em São Paulo, Brasil</span>
+      <span>Trabalha na {{ aboutMe?.works_at }}</span>
+      <span>Estudou na {{ aboutMe?.studied_at }}</span>
+      <span>Mora em {{ aboutMe?.lives_in }}</span>
     </div>
 
     <div class="flex justify-center mt-6">
