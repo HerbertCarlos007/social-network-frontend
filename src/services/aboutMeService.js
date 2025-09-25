@@ -10,6 +10,11 @@ async function getAboutMe() {
     return response
 }
 
+async function updateAboutMe(userId, aboutMeData) {
+    const response = await api.put(`/about-me/${userId}`, aboutMeData)
+    return response
+}
+
 export default {
-    createAboutMe, getAboutMe
+    createAboutMe, getAboutMe,updateAboutMe
 }

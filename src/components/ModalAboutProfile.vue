@@ -1,12 +1,89 @@
 <script setup>
-defineProps({
+import { watch, reactive, ref } from 'vue';
+import aboutMeService from "../services/aboutMeService";
+
+const aboutMe = ref(null);
+
+const props = defineProps({
   showModal: {
     type: Boolean,
     required: true
+  },
+  userId: {
+    type: [Number, String],
+    required: false
   }
 })
 
+
+const aboutMeForm = reactive({
+  about: "",
+  works_at: "",
+  studied_at: "",
+  lives_in: "",
+});
+
+const getAboutMe = async () => {
+  try {
+    const response = await aboutMeService.getAboutMe();
+    aboutMe.value = response.data.data;
+    if (aboutMe.value) {
+      aboutMeForm.about = aboutMe.value.about;
+      aboutMeForm.works_at = aboutMe.value.works_at;
+      aboutMeForm.studied_at = aboutMe.value.studied_at;
+      aboutMeForm.lives_in = aboutMe.value.lives_in;
+    }
+  } catch (error) {
+    console.error("Erro ao buscar dados:", error);
+  }
+};
+
+const createAboutMe = async () => {
+  try {
+    await aboutMeService.createAboutMe(aboutMeForm);
+  } catch (error) {
+    console.error("Erro ao buscar posts:", error);
+  }
+};
+
+const updateAboutMe = async () => {
+  try {
+    await aboutMeService.updateAboutMe(props.userId, aboutMeForm);
+  } catch (error) {
+    console.error("Erro ao buscar posts:", error);
+  }
+};
+
+const handleSave = async () => {
+  if (aboutMe.value) {
+    await updateAboutMe();
+  } else {
+    await createAboutMe();
+  }
+  emit('update:showModal', false);
+};
+
+
+watch(
+  () => props.showModal,
+  async (isOpen) => {
+    if (isOpen) {
+      if (!aboutMe.value) {
+        await getAboutMe();
+      }
+      if (aboutMe.value) {
+        aboutMeForm.about = aboutMe.value.about;
+        aboutMeForm.works_at = aboutMe.value.works_at;
+        aboutMeForm.studied_at = aboutMe.value.studied_at;
+        aboutMeForm.lives_in = aboutMe.value.lives_in;
+      }
+    }
+  }
+);
+
 defineEmits(['update:showModal'])
+
+
 </script>
 
 <template>
@@ -29,22 +106,22 @@ defineEmits(['update:showModal'])
 
         <div>
           <label class="text-sm text-gray-300">Descrição</label>
-          <input type="text" class="w-full bg-[#2e3033] text-white rounded-md p-2 focus:outline-none" value="Desenvolvedor Full Stack JAVA"/>
+          <input type="text" class="w-full bg-[#2e3033] text-white rounded-md p-2 focus:outline-none" v-model="aboutMeForm.about"/>
         </div>
 
         <div>
           <label class="text-sm text-gray-300">Empresa</label>
-          <input type="text" class="w-full bg-[#2e3033] text-white rounded-md p-2 focus:outline-none" value="Deltavoxx"/>
+          <input type="text" class="w-full bg-[#2e3033] text-white rounded-md p-2 focus:outline-none" v-model="aboutMeForm.works_at"/>
         </div>
 
         <div>
           <label class="text-sm text-gray-300">Educação</label>
-          <input type="text" class="w-full bg-[#2e3033] text-white rounded-md p-2 focus:outline-none" value="uninove"/>
+          <input type="text" class="w-full bg-[#2e3033] text-white rounded-md p-2 focus:outline-none" v-model="aboutMeForm.studied_at"/>
         </div>
 
         <div>
           <label class="text-sm text-gray-300">Localização</label>
-          <input type="text" class="w-full bg-[#2e3033] text-white rounded-md p-2 focus:outline-none" value="Santana"/>
+          <input type="text" class="w-full bg-[#2e3033] text-white rounded-md p-2 focus:outline-none" v-model="aboutMeForm.lives_in"/>
         </div>
       </div>
 
@@ -56,7 +133,7 @@ defineEmits(['update:showModal'])
         >
           Cancelar
         </button>
-        <button 
+        <button @click="handleSave()"
           class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
         >
           Salvar Alterações
