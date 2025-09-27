@@ -2,6 +2,8 @@
 import { watch, reactive, ref } from 'vue';
 import aboutMeService from "../services/aboutMeService";
 
+const emit = defineEmits(['update:showModal'])
+
 const aboutMe = ref(null);
 
 const props = defineProps({
@@ -48,7 +50,7 @@ const createAboutMe = async () => {
 
 const updateAboutMe = async () => {
   try {
-    await aboutMeService.updateAboutMe(props.userId, aboutMeForm);
+    await aboutMeService.updateAboutMe(aboutMe.value.id, aboutMeForm);
   } catch (error) {
     console.error("Erro ao buscar posts:", error);
   }
@@ -80,8 +82,6 @@ watch(
     }
   }
 );
-
-defineEmits(['update:showModal'])
 
 
 </script>
