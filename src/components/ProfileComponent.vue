@@ -73,8 +73,8 @@ onMounted(async () => {
     <div class="flex gap-5 items-start">
       <div class="w-1/4">
         <AboutProfileComponent></AboutProfileComponent>
-        <PhotoProfileComponent></PhotoProfileComponent>
         <FriendshipProfileComponent></FriendshipProfileComponent>
+        <PhotoProfileComponent></PhotoProfileComponent>
       </div>
 
       <div class="w-[60%] ml-30">
